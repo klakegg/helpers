@@ -6,6 +6,8 @@ import net.klakegg.helpers.lang.ClassException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+
 public class ConfigHelperTest {
 
     @Test
@@ -19,6 +21,15 @@ public class ConfigHelperTest {
 
         Assert.assertEquals(ConfigHelper.s(config, "value", "Bye bye"), "Hello World");
         Assert.assertEquals(ConfigHelper.s(config, "values", "Bye bye"), "Bye bye");
+    }
+
+    @Test
+    public void testSl() {
+        Config config = ConfigFactory.parseString("value += Hello World\r\nvalue += Bye bye");
+        config = config.resolve();
+
+        Assert.assertEquals(ConfigHelper.sl(config, "value", Collections.emptyList()).size(), 2);
+        Assert.assertEquals(ConfigHelper.sl(config, "values", Collections.emptyList()).size(), 0);
     }
 
     @Test
@@ -69,4 +80,12 @@ public class ConfigHelperTest {
         Assert.assertEquals(ConfigHelper.c(config, "values", ClassHelper.class), ClassHelper.class);
     }
 
+    @Test
+    public void testCl() {
+        Config config = ConfigFactory.parseString("value += net.klakegg.helpers.lang.ClassException\r\nvalue += net.klakegg.helpers.ClassHelper");
+        config = config.resolve();
+
+        Assert.assertEquals(ConfigHelper.cl(config, "value", Collections.emptyList()).size(), 2);
+        Assert.assertEquals(ConfigHelper.cl(config, "values", Collections.emptyList()).size(), 0);
+    }
 }

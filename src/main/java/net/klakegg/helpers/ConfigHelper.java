@@ -2,7 +2,9 @@ package net.klakegg.helpers;
 
 import com.typesafe.config.Config;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ConfigHelper {
 
@@ -14,6 +16,16 @@ public class ConfigHelper {
 
     public static String s(Config config, String path, String defaultValue) {
         return s(config, path).orElse(defaultValue);
+    }
+
+    public static Optional<List<String>> sl(Config config, String path) {
+        if (config.hasPath(path))
+            return Optional.of(config.getStringList(path));
+        return Optional.empty();
+    }
+
+    public static List<String> sl(Config config, String path, List<String> defaultValue) {
+        return sl(config, path).orElse(defaultValue);
     }
 
     public static Optional<Boolean> b(Config config, String path) {
@@ -74,5 +86,17 @@ public class ConfigHelper {
 
     public static Class<?> c(Config config, String path, Class<?> defaultValue) {
         return c(config, path).orElse(defaultValue);
+    }
+
+    public static Optional<List<Class<?>>> cl(Config config, String path) {
+        if (config.hasPath(path))
+            return Optional.of(config.getStringList(path).stream()
+                    .map(ClassHelper::get)
+                    .collect(Collectors.toList()));
+        return Optional.empty();
+    }
+
+    public static List<Class<?>> cl(Config config, String path, List<Class<?>> defaultValue) {
+        return cl(config, path).orElse(defaultValue);
     }
 }
