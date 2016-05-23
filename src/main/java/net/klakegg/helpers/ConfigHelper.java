@@ -65,4 +65,14 @@ public class ConfigHelper {
     public static Number n(Config config, String path, Number defaultValue) {
         return n(config, path).orElse(defaultValue);
     }
+
+    public static Optional<Class<?>> c(Config config, String path) {
+        if (config.hasPath(path))
+            return Optional.of(ClassHelper.get(config.getString(path)));
+        return Optional.empty();
+    }
+
+    public static Class<?> c(Config config, String path, Class<?> defaultValue) {
+        return c(config, path).orElse(defaultValue);
+    }
 }
